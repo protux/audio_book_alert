@@ -8,6 +8,7 @@ from audio_book_alert.scraper import (
 )
 from audio_book_alert.storage import audio_book_repository
 from audio_book_alert.storage.audio_book import AudioBook
+from audio_book_alert.alert import send_alert
 
 
 def parse_audio_books() -> None:
@@ -34,7 +35,7 @@ def parse_audio_books() -> None:
     for audio_book_link in audio_book_links:
         if audio_book_links.count(audio_book_link) > 1:
             print(audio_book_link)
-    # send_alert.send_alert(filtered_audio_books)
+    send_alert.send_alert(filtered_audio_books)
 
 
 def start_telegram_bot() -> None:
