@@ -9,19 +9,16 @@ from audio_book_alert.scraper import (
 from audio_book_alert.storage import audio_book_repository
 from audio_book_alert.storage.audio_book import AudioBook
 from audio_book_alert.alert import send_alert
+from audio_book_alert.scraper import parser_config
 
 
 def parse_audio_books() -> None:
     audio_books: List[AudioBook] = []
 
-    with open('author_names', 'r') as author_names:
-        authors = author_names.readlines()
-        for author in authors:
-            audio_books += scraper.find_titles_by_author(author.strip())
-    with open('narrator_names', 'r') as narrator_names_file:
-        narrators = narrator_names_file.readlines()
-        for narrator in narrators:
-            audio_books += scraper.find_titles_by_narrator(narrator.strip())
+    for author in parser_config.authors:
+        audio_books += scraper.find_titles_by_author(author.strip())
+    for narrator in parser_config.narrators:
+        audio_books += scraper.find_titles_by_narrator(narrator.strip())
 
     past_audio_books = audio_book_repository.get_all_audio_books()
     filtered_audio_books = filter.filter_audio_books(audio_books, past_audio_books)
