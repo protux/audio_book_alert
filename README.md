@@ -53,6 +53,25 @@ PyCharm is what I am currently using - so the IDE is a bit biased. To use it ple
     - `ABA_TELEGRAM_BOT_NAME=${NAME_OF_YOUR_BOT}`
     - `ABA_TELEGRAM_API_KEY=${YOUR_BOT_API_KEY}`
 
+# Installation
+To install the program you need to `cd` into the root of this repository and execute `pip install .`. It might be necessary to escalate your permissions (e.g. with sudo). 
+
+# Set Up
+You need to setup the scraper to fetch the data and the bot to distribute the information.
+
+## Precautions
+To get the program to work you need to set up a telegram bot. Please see "Set up your telegram bot" above for more information.
+
+## Set up the scraper
+To scrape the audio books regularly you should set up the scraper as a cronjob. To do that just run the following command:
+```bash
+crontab -e
+```
+To scrape each hour for new audio books you could add the following line.
+```bash
+0 * * * * python -m audio_book_scraper
+```
+
 # TODO in Readme
 - explain how to start telegram bot
 - explain how to activate scraper
