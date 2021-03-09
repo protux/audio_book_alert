@@ -1,3 +1,6 @@
 .idea/
 venv/
 **/__pycache__/
+Audio_Book_Alert.egg-info/
+build/
+dist/
