@@ -53,7 +53,7 @@ PyCharm is what I am currently using - so the IDE is a bit biased. To use it ple
     - `ABA_TELEGRAM_BOT_NAME=${NAME_OF_YOUR_BOT}`
     - `ABA_TELEGRAM_API_KEY=${YOUR_BOT_API_KEY}`
 
-# Installation
+# Deployment
 To install the program you need to `cd` into the root of this repository and execute `pip install .`. It might be necessary to escalate your permissions (e.g. with sudo). 
 
 # Set Up
@@ -72,12 +72,27 @@ To scrape each hour for new audio books you could add the following line.
 0 * * * * python -m audio_book_scraper
 ```
 
-# TODO in Readme
-- explain how to start telegram bot
-- explain how to activate scraper
-- explpain how to add narrators/ authors
+## Set up telegram bot
+To set up the bot you need to copy the `audio_book_alert.service` to `/etc/systemd/system/`.
 
-# TODO in code
+After that, you need to tell systemd to load the new service with 
+```bash
+systemctl daemon-reload
+```
+
+To make sure the service is started on booting your server enter the following command.
+```bash
+systemctl enable audio_book_alert
+```
+Finally, you need to start the service. You start the service with
+```bash
+systemctl start audio_book_alert
+```
+
+## Adding narrators or authors
+To add narrators or authors just add them to the respective list in `audio_book_alert/scraper/parser_config.py`.
+
+# TODO
 - write file for starting telegram bot as systemd service
 - move storage to database and not text file full of json
 - make authors and narrators configurable more dynamically
