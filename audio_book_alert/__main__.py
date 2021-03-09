@@ -23,15 +23,6 @@ def parse_audio_books() -> None:
     past_audio_books = audio_book_repository.get_all_audio_books()
     filtered_audio_books = filter.filter_audio_books(audio_books, past_audio_books)
     audio_book_repository.save_audio_books(filtered_audio_books)
-    print(f'{len(filtered_audio_books)} Hörbücher gefunden')
-    print()
-    for audio_book in filtered_audio_books:
-        print(audio_book.link)
-    print()
-    audio_book_links: List[str] = [audio_book.link for audio_book in filtered_audio_books]
-    for audio_book_link in audio_book_links:
-        if audio_book_links.count(audio_book_link) > 1:
-            print(audio_book_link)
     send_alert.send_alert(filtered_audio_books)
 
 
