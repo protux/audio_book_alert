@@ -14,17 +14,19 @@ SUBSCRIBERS_SAVE_FILE = path.join(
 
 
 def subscribe_user(user_data: User) -> bool:
-    file_utils.make_sure_file_exists(SUBSCRIBERS_SAVE_FILE)
+    file_was_created: bool = file_utils.make_sure_file_exists(SUBSCRIBERS_SAVE_FILE)
     subscribed_ids = _read_subriber_ids_from_file()
     if user_data.id not in subscribed_ids:
-        _add_subscriber_to_storage(user_data)
+        _add_subscriber_to_storage(user_data, file_was_created)
         return True
     else:
         return False
 
 
-def _add_subscriber_to_storage(user_data):
+def _add_subscriber_to_storage(user_data, first_entry: bool):
     with open(SUBSCRIBERS_SAVE_FILE, 'a') as subscribers_file:
+        if not first_entry:
+            subscribers_file.write('\n')
         serialized_user_data = {
             'id': user_data.id,
             'language': user_data.language_code,
