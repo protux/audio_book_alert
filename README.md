@@ -73,7 +73,8 @@ To scrape each hour for new audio books you could add the following line.
 ```
 
 ## Set up telegram bot
-To set up the bot you need to copy the `audio_book_alert.service` to `/etc/systemd/system/`.
+At first you need to edit the `audio_book_alert.service` file. You need to put in your username, your bots name and your telegram API-Key.
+After that, you need to copy the `audio_book_alert.service` to `/etc/systemd/system/` to set up the bot .
 
 After that, you need to tell systemd to load the new service with 
 ```bash
