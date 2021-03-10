@@ -9,11 +9,10 @@ Type=simple
 User=<USERNAME_TO_ACT_AS>
 Environment="ABA_TELEGRAM_BOT_NAME=<BOT_NAME>"
 Environment="ABA_TELEGRAM_API_KEY=<API_KEY>"
-ExecStart=python3 -m audio_book_alert --bot-mode
+ExecStart=/usr/bin/env python3 -m audio_book_alert --bot-mode
 Restart=on-failure
 RestartSec=10
 KillMode=mixed
-OOMPolicy=stop
 
 [Install]
 WantedBy=multi-user.target
