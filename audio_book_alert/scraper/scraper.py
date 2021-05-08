@@ -9,17 +9,21 @@ from requests import Response
 from audio_book_alert.scraper import parser
 from audio_book_alert.storage.audio_book import AudioBook
 
-AUDIBLE_AUTHOR_SEARCH_URL = 'https://www.audible.de/search?searchAuthor={author}&pageSize=50&page={page}'
-AUDIBLE_NARRATOR_SEARCH_URL = 'https://www.audible.de/search?searchNarrator={narrator}&pageSize=50&page={page}'
+AUDIBLE_AUTHOR_SEARCH_URL = (
+    "https://www.audible.de/search?searchAuthor={author}&pageSize=50&page={page}"
+)
+AUDIBLE_NARRATOR_SEARCH_URL = (
+    "https://www.audible.de/search?searchNarrator={narrator}&pageSize=50&page={page}"
+)
 
 
 def find_titles_by_author(author: str) -> Set[AudioBook]:
-    author_url: str = AUDIBLE_AUTHOR_SEARCH_URL.format(author=author, page='{page}')
+    author_url: str = AUDIBLE_AUTHOR_SEARCH_URL.format(author=author, page="{page}")
     return _find_titles(author_url)
 
 
 def find_titles_by_narrator(narrator: str) -> Set[AudioBook]:
-    narrator_url = AUDIBLE_NARRATOR_SEARCH_URL.format(narrator=narrator, page='{page}')
+    narrator_url = AUDIBLE_NARRATOR_SEARCH_URL.format(narrator=narrator, page="{page}")
     return _find_titles(narrator_url)
 
 
@@ -38,11 +42,9 @@ def _find_titles(url: str) -> Set[AudioBook]:
 
 
 def _request_html(url: str, **kwargs) -> str:
-    response: Response = requests.get(
-        url.format(**kwargs)
-    )
+    response: Response = requests.get(url.format(**kwargs))
     if response.status_code != 200:
         raise Exception(
-            f'got status code {response.status_code} and response {response.text}'
+            f"got status code {response.status_code} and response {response.text}"
         )
     return response.text

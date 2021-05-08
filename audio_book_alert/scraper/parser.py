@@ -6,34 +6,35 @@ from bs4 import BeautifulSoup
 from audio_book_alert.storage.audio_book import AudioBook
 from audio_book_alert.storage import audio_book_repository
 
-CSS_SELECTOR_LIST_ITEMS = \
-    '.adbl-impression-container > ' + \
-    '.bc-list-item > ' + \
-    '.bc-row-responsive > ' + \
-    '.bc-col-responsive > ' + \
-    '.bc-row-responsive > ' + \
-    '.bc-col-responsive > ' + \
-    '.bc-row-responsive > ' + \
-    '.bc-col-responsive > ' + \
-    'span > ' + \
-    'ul'
-CSS_TITLE_SELECTOR = 'li:first-child > h3 > a'
-CSS_SUBTITLE_SELECTOR = '.subtitle'
-CSS_SELECTOR_AUTHOR = '.authorLabel a'
-CSS_SELECTOR_NARRATOR = '.narratorLabel a'
-CSS_SELECTOR_PLAY_TIME = '.runtimeLabel'
-CSS_SELECTOR_RELEASE_DATE = '.releaseDateLabel'
-CSS_SELECTOR_LANGUAGE = '.languageLabel'
-CSS_SELECTOR_PAGE_NUMBERS = '.pageNumberElement'
+CSS_SELECTOR_LIST_ITEMS = (
+    ".adbl-impression-container > "
+    + ".bc-list-item > "
+    + ".bc-row-responsive > "
+    + ".bc-col-responsive > "
+    + ".bc-row-responsive > "
+    + ".bc-col-responsive > "
+    + ".bc-row-responsive > "
+    + ".bc-col-responsive > "
+    + "span > "
+    + "ul"
+)
+CSS_TITLE_SELECTOR = "li:first-child > h3 > a"
+CSS_SUBTITLE_SELECTOR = ".subtitle"
+CSS_SELECTOR_AUTHOR = ".authorLabel a"
+CSS_SELECTOR_NARRATOR = ".narratorLabel a"
+CSS_SELECTOR_PLAY_TIME = ".runtimeLabel"
+CSS_SELECTOR_RELEASE_DATE = ".releaseDateLabel"
+CSS_SELECTOR_LANGUAGE = ".languageLabel"
+CSS_SELECTOR_PAGE_NUMBERS = ".pageNumberElement"
 
 
 def parse_page_count(html_body: str) -> int:
-    soup: BeautifulSoup = BeautifulSoup(html_body, 'lxml')
+    soup: BeautifulSoup = BeautifulSoup(html_body, "lxml")
     page_number_elements = soup.select(CSS_SELECTOR_PAGE_NUMBERS)
     page_numbers: List[int] = []
     for page_number_element in page_number_elements:
         string_number = str(next(page_number_element.stripped_strings))
-        if string_number != '...':
+        if string_number != "...":
             page_numbers.append(int(string_number))
 
     if page_numbers:
@@ -44,7 +45,7 @@ def parse_page_count(html_body: str) -> int:
 
 def parse_audio_books(html_body: str) -> List[AudioBook]:
     stored_audible_links = audio_book_repository.get_all_audio_book_links()
-    soup: BeautifulSoup = BeautifulSoup(html_body, 'lxml')
+    soup: BeautifulSoup = BeautifulSoup(html_body, "lxml")
     audio_books: List[AudioBook] = []
     audio_book_item_information_elements = soup.select(CSS_SELECTOR_LIST_ITEMS)
     for audio_book_item_information_element in audio_book_item_information_elements:
@@ -62,11 +63,9 @@ def _parse_audio_book(audio_book_item_information_element) -> AudioBook:
         author=_parse_author(audio_book_item_information_element),
         reader=_parse_narrator(audio_book_item_information_element),
         play_time=_parse_play_time(audio_book_item_information_element),
-        release_date=_parse_release_date(
-            audio_book_item_information_element
-        ),
+        release_date=_parse_release_date(audio_book_item_information_element),
         language=_parse_language(audio_book_item_information_element),
-        link=_parse_link(audio_book_item_information_element)
+        link=_parse_link(audio_book_item_information_element),
     )
 
 
@@ -80,12 +79,12 @@ def _parse_subtitle(bs_element) -> str:
 
 def _parse_author(bs_element) -> str:
     authors: str = parse_by_css_element(bs_element, CSS_SELECTOR_AUTHOR)
-    return f'Geschrieben von: {authors}'
+    return f"Geschrieben von: {authors}"
 
 
 def _parse_narrator(bs_element) -> str:
     narrators: str = parse_by_css_element(bs_element, CSS_SELECTOR_NARRATOR)
-    return f'Gesprochen von: {narrators}'
+    return f"Gesprochen von: {narrators}"
 
 
 def _parse_play_time(bs_element) -> str:
@@ -102,8 +101,8 @@ def _parse_language(bs_element) -> str:
 
 def _parse_link(bs_element) -> str:
     element = bs_element.select(CSS_TITLE_SELECTOR)[0]
-    path: str = element['href']
-    return f'https://audible.de{path}'
+    path: str = element["href"]
+    return f"https://audible.de{path}"
 
 
 def parse_by_css_element(bs_element, css_selector: str) -> str:
@@ -113,9 +112,9 @@ def parse_by_css_element(bs_element, css_selector: str) -> str:
         strings: List[str] = []
         for element in elements:
             strings.append(next(element.stripped_strings))
-        content: str = ', '.join(strings)
+        content: str = ", ".join(strings)
         # content: str = str(next(elements[0].stripped_strings))
-        stripped_content: str = re.sub(r'\s+', ' ', content)
+        stripped_content: str = re.sub(r"\s+", " ", content)
         return stripped_content
     else:
-        return ''
+        return ""

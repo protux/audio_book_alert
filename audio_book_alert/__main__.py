@@ -30,8 +30,8 @@ def start_telegram_bot() -> None:
     telegram_bot.start_bot()
 
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1] == '--bot-mode':
+if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "--bot-mode":
         start_telegram_bot()
     else:
         parse_audio_books()

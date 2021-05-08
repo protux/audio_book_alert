@@ -4,11 +4,12 @@ from audio_book_alert.storage.audio_book import AudioBook
 
 
 def filter_audio_books(
-        parsed_audio_books: List[AudioBook],
-        past_audio_books: List[AudioBook]
+    parsed_audio_books: List[AudioBook], past_audio_books: List[AudioBook]
 ) -> List[AudioBook]:
     filtered_audio_books: List[AudioBook] = [
-        audio_book for audio_book in parsed_audio_books if _should_accept_audio_book(audio_book, past_audio_books)
+        audio_book
+        for audio_book in parsed_audio_books
+        if _should_accept_audio_book(audio_book, past_audio_books)
     ]
     audio_books_without_duplicates = _remove_duplicates(filtered_audio_books)
     return audio_books_without_duplicates
@@ -24,12 +25,16 @@ def _remove_duplicates(filtered_audio_books):
     return audio_books_without_duplicates
 
 
-def _should_accept_audio_book(audio_book: AudioBook, past_audio_books: List[AudioBook]) -> bool:
-    return _audio_book_has_acceptable_language(audio_book) and _audio_book_already_known(audio_book, past_audio_books)
+def _should_accept_audio_book(
+    audio_book: AudioBook, past_audio_books: List[AudioBook]
+) -> bool:
+    return _audio_book_has_acceptable_language(
+        audio_book
+    ) and _audio_book_already_known(audio_book, past_audio_books)
 
 
 def _audio_book_has_acceptable_language(audio_book):
-    return 'Deutsch' in audio_book.language or not audio_book.language
+    return "Deutsch" in audio_book.language or not audio_book.language
 
 
 def _audio_book_already_known(audio_book, past_audio_books):

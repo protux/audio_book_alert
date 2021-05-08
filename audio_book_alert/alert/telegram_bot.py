@@ -31,7 +31,7 @@ def create_updater() -> Updater:
 
 
 def _register_commands(dispatcher: Dispatcher) -> None:
-    start_command_handler = CommandHandler('start', _start_command_listener)
+    start_command_handler = CommandHandler("start", _start_command_listener)
     dispatcher.add_handler(start_command_handler)
 
     unknown_handler = MessageHandler(Filters.command, _unknown_command)
@@ -40,25 +40,24 @@ def _register_commands(dispatcher: Dispatcher) -> None:
 
 def _start_command_listener(update: Update, context: CallbackContext):
     successfully_subscribed = subscription_manager.subscribe_user(
-        update.effective_message.from_user,
-        update.effective_chat.id
+        update.effective_message.from_user, update.effective_chat.id
     )
     if successfully_subscribed:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text='Du bist jetzt für Hörbuch-Updates angemeldet.'
+            text="Du bist jetzt für Hörbuch-Updates angemeldet.",
         )
     else:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text='Du bist bereits für Hörbuch-Updates angemeldet.'
+            text="Du bist bereits für Hörbuch-Updates angemeldet.",
         )
 
 
 def _unknown_command(update: Update, context: CallbackContext):
     context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text='Tut mir leid, das habe ich nicht verstanden. Registriere dich für Hörbuch-Updates mit /start'
+        text="Tut mir leid, das habe ich nicht verstanden. Registriere dich für Hörbuch-Updates mit /start",
     )
 
 
