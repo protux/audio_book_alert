@@ -9,7 +9,7 @@ from audio_book_alert.alert import (
 
 def send_alert(audio_books: List[AudioBook]) -> None:
     if audio_books:
-        subscriber_ids = subscription_manager.get_all_subscriber_ids()
+        subscriber_ids = subscription_manager.get_all_subscribers_chat_ids()
         serialized_audio_books = serialize_all_audio_books_human_readable(audio_books)
         telegram_bot.send_message(serialized_audio_books, subscriber_ids)
 
