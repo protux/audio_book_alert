@@ -4,3 +4,4 @@ venv/
 Audio_Book_Alert.egg-info/
 build/
 dist/
+**/db.sqlite3
