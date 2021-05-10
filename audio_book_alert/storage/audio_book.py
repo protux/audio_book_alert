@@ -1,17 +1,27 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+)
 
-@dataclass
-class AudioBook:
-    title: str
-    subtitle: Optional[str]
-    author: str
-    reader: str
-    play_time: str
-    release_date: str
-    language: str
-    link: str
+from audio_book_alert.database.orm import Base
+
+
+class AudioBook(Base):
+    __tablename__ = "audio_books"
+
+    id: Column = Column(Integer, primary_key=True, autoincrement=True)
+    title: Column = Column(String, nullable=False)
+    subtitle: Column = Column(String)
+    author: Column = Column(String, nullable=False)
+    reader: Column = Column(String, nullable=False)
+    play_time: Column = Column(String)
+    release_date: Column = Column(String)
+    language: Column = Column(String)
+    link: Column = Column(String, nullable=False)
 
     def __hash__(self):
         return hash(self.title + self.author + self.play_time)

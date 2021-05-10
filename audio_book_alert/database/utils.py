@@ -13,7 +13,9 @@ def get_database_schema() -> str:
 
 def get_db_engine():
     connection_string = get_connection_string()
-    if connection_string.startswith('sqlite'):
-        return create_engine(connection_string, connect_args={"check_same_thread": False})
+    if connection_string.startswith("sqlite"):
+        return create_engine(
+            connection_string, connect_args={"check_same_thread": False}
+        )
     else:
         return create_engine(connection_string)

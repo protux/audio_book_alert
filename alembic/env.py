@@ -11,7 +11,7 @@ from audio_book_alert.database.orm import Base
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option('sqlalchemy.url', utils.get_connection_string())
+config.set_main_option("sqlalchemy.url", utils.get_connection_string())
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -57,7 +57,7 @@ def run_migrations_online():
 
         with context.begin_transaction():
             db_url = utils.get_connection_string()
-            if not db_url.startswith('sqlite'):
+            if not db_url.startswith("sqlite"):
                 if db_schema:
                     context.execute(f'CREATE SCHEMA IF NOT EXISTS "{db_schema}"')
                     context.execute(f'SET search_path TO "{db_schema}"')
@@ -71,10 +71,10 @@ def process_revision_directives(context, revision, directives):
     if head_revision is None:
         new_rev_id = 1
     else:
-        last_rev_id = int(head_revision.lstrip('0'))
+        last_rev_id = int(head_revision.lstrip("0"))
         new_rev_id = last_rev_id + 1
 
-    migration_script.rev_id = '{0:04}'.format(new_rev_id)
+    migration_script.rev_id = "{0:04}".format(new_rev_id)
 
 
 if not context.is_offline_mode():
