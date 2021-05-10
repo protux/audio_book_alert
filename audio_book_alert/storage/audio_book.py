@@ -1,8 +1,8 @@
-from dataclasses import dataclass
-from typing import Optional
+from sqlalchemy.sql import func
 
 from sqlalchemy import (
     Column,
+    DateTime,
     Integer,
     String,
 )
@@ -22,6 +22,7 @@ class AudioBook(Base):
     release_date: Column = Column(String)
     language: Column = Column(String)
     link: Column = Column(String, nullable=False)
+    time_added = Column(DateTime, server_default=func.now())
 
     def __hash__(self):
         return hash(self.title + self.author + self.play_time)
