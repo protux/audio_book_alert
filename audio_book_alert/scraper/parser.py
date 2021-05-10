@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 
 from audio_book_alert.storage.audio_book import AudioBook
-from audio_book_alert.storage import audio_book_repository
+from audio_book_alert.storage import audio_book_file_repository
 
 CSS_SELECTOR_LIST_ITEMS = (
     ".adbl-impression-container > "
@@ -44,7 +44,7 @@ def parse_page_count(html_body: str) -> int:
 
 
 def parse_audio_books(html_body: str) -> List[AudioBook]:
-    stored_audible_links = audio_book_repository.get_all_audio_book_links()
+    stored_audible_links = audio_book_file_repository.get_all_audio_book_links()
     soup: BeautifulSoup = BeautifulSoup(html_body, "lxml")
     audio_books: List[AudioBook] = []
     audio_book_item_information_elements = soup.select(CSS_SELECTOR_LIST_ITEMS)
