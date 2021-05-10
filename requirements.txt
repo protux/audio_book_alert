@@ -5,3 +5,11 @@ pydantic==1.8.1
 python-telegram-bot==13.5
 requests==2.25.1
 SQLAlchemy==1.4.14
+
+# mypy
+mypy==0.812
+sqlalchemy2-stubs==0.0.1a10
+
+# linting
+flake8==3.9.2
+black==21.5b0
