@@ -1,11 +1,10 @@
-from sqlalchemy.sql import func
-
 from sqlalchemy import (
     Column,
     DateTime,
     Integer,
     String,
 )
+from sqlalchemy.sql import func
 
 from audio_book_alert.database.orm import Base
 
