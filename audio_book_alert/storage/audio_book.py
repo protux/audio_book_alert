@@ -22,7 +22,7 @@ class AudioBook(Base):
     release_date: Column = Column(String)
     language: Column = Column(String)
     link: Column = Column(String, nullable=False)
-    time_added = Column(DateTime, server_default=func.now())
+    time_added = Column(DateTime, nullable=False, server_default=func.now())
 
     def __hash__(self):
         return hash(self.title + self.author + self.play_time)

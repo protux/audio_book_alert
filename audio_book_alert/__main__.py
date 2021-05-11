@@ -1,15 +1,15 @@
 import sys
 from typing import List
 
+from audio_book_alert.alert import send_alert
 from audio_book_alert.alert import telegram_bot
+from audio_book_alert.scraper import parser_config
 from audio_book_alert.scraper import (
     scraper,
     filter,
 )
 from audio_book_alert.storage import audio_book_file_repository
 from audio_book_alert.storage.audio_book import AudioBook
-from audio_book_alert.alert import send_alert
-from audio_book_alert.scraper import parser_config
 
 
 def parse_audio_books() -> None:
@@ -22,7 +22,6 @@ def parse_audio_books() -> None:
 
     past_audio_books = audio_book_file_repository.get_all_audio_books()
     filtered_audio_books = filter.filter_audio_books(audio_books, past_audio_books)
-    audio_book_file_repository.save_audio_books(filtered_audio_books)
     send_alert.send_alert(filtered_audio_books)
 
 

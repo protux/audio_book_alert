@@ -5,6 +5,7 @@ pydantic==1.8.1
 python-telegram-bot==13.5
 requests==2.25.1
 SQLAlchemy==1.4.14
+pytest==6.2.4
 
 # mypy
 mypy==0.812
