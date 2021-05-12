@@ -20,13 +20,13 @@ from audio_book_alert.alert import subscription_manager
 
 
 def start_bot() -> None:
-    updater = create_updater()
+    updater = _create_updater()
     dispatcher = updater.dispatcher
     _register_commands(dispatcher)
     updater.start_polling()
 
 
-def create_updater() -> Updater:
+def _create_updater() -> Updater:
     return Updater(token=config.Settings().telegram_api_key, use_context=True)
 
 
@@ -65,13 +65,13 @@ def send_message(messages: List[str], chat_ids: List[int]) -> None:
     for chat_id in chat_ids:
         bot: Bot = Bot(token=config.Settings().telegram_api_key)
         for message in messages:
-            send_telegram_message(bot, message, chat_id)
+            _send_telegram_message(bot, message, chat_id)
 
 
-def send_telegram_message(bot, message, chat_id):
+def _send_telegram_message(bot, message, chat_id):
     try:
         bot.send_message(chat_id=chat_id, text=message)
     except RetryAfter as e:
         retry_in_seconds: float = e.retry_after
         time.sleep(retry_in_seconds)
-        send_telegram_message(bot, message, chat_id)
+        _send_telegram_message(bot, message, chat_id)
