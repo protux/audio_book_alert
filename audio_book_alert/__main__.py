@@ -1,7 +1,7 @@
 import sys
 from typing import List
 
-from audio_book_alert.alert import send_alert
+from audio_book_alert.alert.send_alert_service import SendAlertService
 from audio_book_alert.alert import telegram_bot
 from audio_book_alert.scraper import parser_config
 from audio_book_alert.scraper import (
@@ -10,9 +10,11 @@ from audio_book_alert.scraper import (
 )
 from audio_book_alert.storage import audio_book_file_repository
 from audio_book_alert.storage.audio_book import AudioBook
+from audio_book_alert.database.orm import get_db
 
 
 def parse_audio_books() -> None:
+    db_session = get_db()
     audio_books: List[AudioBook] = []
 
     for author in parser_config.authors:
@@ -22,7 +24,7 @@ def parse_audio_books() -> None:
 
     past_audio_books = audio_book_file_repository.get_all_audio_books()
     filtered_audio_books = filter.filter_audio_books(audio_books, past_audio_books)
-    send_alert.send_alert(filtered_audio_books)
+    SendAlertService(db_session).send_alert(filtered_audio_books)
 
 
 def start_telegram_bot() -> None:
