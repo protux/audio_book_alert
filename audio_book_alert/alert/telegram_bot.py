@@ -38,7 +38,7 @@ def _register_commands(dispatcher: Dispatcher) -> None:
     dispatcher.add_handler(unknown_handler)
 
 
-def _start_command_listener(update: Update, context: CallbackContext):
+def _start_command_listener(update: Update, context: CallbackContext) -> None:
     successfully_subscribed = subscription_manager.subscribe_user(
         update.effective_message.from_user, update.effective_chat.id
     )
@@ -54,7 +54,7 @@ def _start_command_listener(update: Update, context: CallbackContext):
         )
 
 
-def _unknown_command(update: Update, context: CallbackContext):
+def _unknown_command(update: Update, context: CallbackContext) -> None:
     context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="Tut mir leid, das habe ich nicht verstanden. Registriere dich für Hörbuch-Updates mit /start",
@@ -68,7 +68,7 @@ def send_message(messages: List[str], chat_ids: List[int]) -> None:
             _send_telegram_message(bot, message, chat_id)
 
 
-def _send_telegram_message(bot, message, chat_id):
+def _send_telegram_message(bot: Bot, message: str, chat_id: int) -> None:
     try:
         bot.send_message(chat_id=chat_id, text=message)
     except RetryAfter as e:
