@@ -16,7 +16,11 @@ from telegram.ext import (
 )
 
 from audio_book_alert import config
-from audio_book_alert.alert import subscription_manager
+from audio_book_alert.alert.storage.telegram_subscription import TelegramSubscription
+from audio_book_alert.alert.storage.telegram_subscription_repository import (
+    TelegramSubscriptionRepository,
+)
+from audio_book_alert.database.orm import get_db
 
 
 def start_bot() -> None:
@@ -39,9 +43,8 @@ def _register_commands(dispatcher: Dispatcher) -> None:
 
 
 def _start_command_listener(update: Update, context: CallbackContext) -> None:
-    successfully_subscribed = subscription_manager.subscribe_user(
-        update.effective_message.from_user, update.effective_chat.id
-    )
+    successfully_subscribed = _subscribe_user(update)
+
     if successfully_subscribed:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -52,6 +55,21 @@ def _start_command_listener(update: Update, context: CallbackContext) -> None:
             chat_id=update.effective_chat.id,
             text="Du bist bereits für Hörbuch-Updates angemeldet.",
         )
+
+
+def _subscribe_user(update):
+    telegram_subscription: TelegramSubscription = TelegramSubscription(
+        user_id=update.effective_message.from_user.id,
+        language=update.effective_message.from_user.language_code,
+        chat_id=update.effective_chat.id,
+    )
+    telegram_subscription_repository: TelegramSubscriptionRepository = (
+        TelegramSubscriptionRepository(get_db())
+    )
+    successfully_subscribed: bool = telegram_subscription_repository.subscribe_user(
+        telegram_subscription
+    )
+    return successfully_subscribed
 
 
 def _unknown_command(update: Update, context: CallbackContext) -> None:

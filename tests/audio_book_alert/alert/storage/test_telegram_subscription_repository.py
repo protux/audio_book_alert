@@ -1,11 +1,9 @@
-from typing import List
 import copy
+from typing import List
 
 from pytest import (
     fixture,
-    raises,
 )
-from sqlalchemy.exc import IntegrityError
 
 from audio_book_alert.alert.storage.telegram_subscription import TelegramSubscription
 from audio_book_alert.alert.storage.telegram_subscription_repository import (
@@ -18,8 +16,11 @@ def test_subscribe_user_persist_subscription(
     telegram_subscription_repository: TelegramSubscriptionRepository,
     telegram_subscription: TelegramSubscription,
 ) -> None:
-    telegram_subscription_repository.subscribe_user(telegram_subscription)
+    subscribed_successfully = telegram_subscription_repository.subscribe_user(
+        telegram_subscription
+    )
 
+    assert subscribed_successfully
     db_session: test_orm.TestingSessionLocal = next(test_orm.get_db_for_testing())
     subscribed_users: List[TelegramSubscription] = db_session.query(
         TelegramSubscription
@@ -31,7 +32,7 @@ def test_subscribe_user_persist_subscription(
     assert telegram_subscription.language == subscribed_user.language
 
 
-def test_subscribe_user_raises_on_duplicate_chat_id(
+def test_subscribe_user_returns_false_on_duplicate_chat_id(
     telegram_subscription_repository: TelegramSubscriptionRepository,
     telegram_subscription: TelegramSubscription,
 ) -> None:
@@ -40,9 +41,10 @@ def test_subscribe_user_raises_on_duplicate_chat_id(
     )
 
     telegram_subscription_repository.subscribe_user(telegram_subscription)
-
-    with raises(IntegrityError):
-        telegram_subscription_repository.subscribe_user(telegram_subscription_copy)
+    successfully_subscribed = telegram_subscription_repository.subscribe_user(
+        telegram_subscription_copy
+    )
+    assert not successfully_subscribed
 
 
 def test_get_all_subscribers_chat_ids_returns_chat_ids(
