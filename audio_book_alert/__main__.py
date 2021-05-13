@@ -18,7 +18,7 @@ def start_telegram_bot() -> None:
     telegram_bot.start_bot()
 
 
-def parse_audio_books() -> None:
+def parse_audio_books(silent_run: bool) -> None:
     db_session = get_db()
     audio_books: List[AudioBook] = []
     audio_book_repository: AudioBookRepository = AudioBookRepository(db_session)
@@ -37,15 +37,20 @@ def parse_audio_books() -> None:
         audio_books, past_audio_books
     )
     audio_book_repository.save_audio_books(filtered_audio_books)
-    SendAlertService(db_session).send_alert(filtered_audio_books)
+
+    if not silent_run:
+        SendAlertService(db_session).send_alert(filtered_audio_books)
 
 
 if __name__ == "__main__":
+    silent_run = False
     if len(sys.argv) > 1:
         if sys.argv[1] == "--bot-mode":
             start_telegram_bot()
         elif sys.argv[1] == "--migrate":
             json_to_db_migration.migrate_json_to_database()
+        elif sys.argv[1] == "--silent":
+            dry_run = True
     else:
-        parse_audio_books()
+        parse_audio_books(silent_run)
     print("Unknown parameters parsed.")
