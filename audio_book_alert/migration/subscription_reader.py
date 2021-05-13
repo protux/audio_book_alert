@@ -14,7 +14,5 @@ SUBSCRIBERS_SAVE_FILE = path.join(
 def read_subscribers_from_file() -> List[dict]:
     with open(SUBSCRIBERS_SAVE_FILE, "r") as subscribers_file:
         subscribers_plain: List[str] = subscribers_file.readlines()
-        subscribers = [
-            json.loads(subscriber) for subscriber in subscribers_plain
-        ]
+        subscribers = [json.loads(subscriber) for subscriber in subscribers_plain]
         return subscribers

@@ -21,13 +21,17 @@ def start_telegram_bot() -> None:
 def parse_audio_books() -> None:
     db_session = get_db()
     audio_books: List[AudioBook] = []
+    audio_book_repository: AudioBookRepository = AudioBookRepository(db_session)
 
     for author in parser_config.authors:
-        audio_books += scraper.find_titles_by_author(author.strip())
+        audio_books += scraper.find_titles_by_author(
+            author.strip(), audio_book_repository
+        )
     for narrator in parser_config.narrators:
-        audio_books += scraper.find_titles_by_narrator(narrator.strip())
+        audio_books += scraper.find_titles_by_narrator(
+            narrator.strip(), audio_book_repository
+        )
 
-    audio_book_repository: AudioBookRepository = AudioBookRepository(db_session)
     past_audio_books: List[AudioBook] = audio_book_repository.get_all_audio_books()
     filtered_audio_books: List[AudioBook] = filter.filter_audio_books(
         audio_books, past_audio_books

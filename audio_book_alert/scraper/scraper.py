@@ -8,6 +8,7 @@ from requests import Response
 
 from audio_book_alert.scraper import parser
 from audio_book_alert.storage.audio_book import AudioBook
+from audio_book_alert.storage.audio_book_repository import AudioBookRepository
 
 AUDIBLE_AUTHOR_SEARCH_URL = (
     "https://www.audible.de/search?searchAuthor={author}&pageSize=50&page={page}"
@@ -17,25 +18,31 @@ AUDIBLE_NARRATOR_SEARCH_URL = (
 )
 
 
-def find_titles_by_author(author: str) -> Set[AudioBook]:
+def find_titles_by_author(
+    author: str, audio_book_repository: AudioBookRepository
+) -> Set[AudioBook]:
     author_url: str = AUDIBLE_AUTHOR_SEARCH_URL.format(author=author, page="{page}")
-    return _find_titles(author_url)
+    return _find_titles(author_url, audio_book_repository)
 
 
-def find_titles_by_narrator(narrator: str) -> Set[AudioBook]:
+def find_titles_by_narrator(
+    narrator: str, audio_book_repository: AudioBookRepository
+) -> Set[AudioBook]:
     narrator_url = AUDIBLE_NARRATOR_SEARCH_URL.format(narrator=narrator, page="{page}")
-    return _find_titles(narrator_url)
+    return _find_titles(narrator_url, audio_book_repository)
 
 
-def _find_titles(url: str) -> Set[AudioBook]:
+def _find_titles(
+    url: str, audio_book_repository: AudioBookRepository
+) -> Set[AudioBook]:
     audio_books: Set[AudioBook] = set()
     html = _request_html(url=url, page=1)
-    audio_books.update(parser.parse_audio_books(html))
+    audio_books.update(parser.parse_audio_books(html, audio_book_repository))
     page_count = parser.parse_page_count(html)
 
     for i in range(2, page_count + 1):
         html = _request_html(url=url, page=i)
-        parsed_audio_books = parser.parse_audio_books(html)
+        parsed_audio_books = parser.parse_audio_books(html, audio_book_repository)
         audio_books.update(parsed_audio_books)
 
     return audio_books
