@@ -4,6 +4,7 @@ from typing import List
 from audio_book_alert.alert import telegram_bot
 from audio_book_alert.alert.send_alert_service import SendAlertService
 from audio_book_alert.database.orm import get_db
+from audio_book_alert.migration import json_to_db_migration
 from audio_book_alert.scraper import parser_config
 from audio_book_alert.scraper import (
     scraper,
@@ -11,6 +12,10 @@ from audio_book_alert.scraper import (
 )
 from audio_book_alert.storage.audio_book import AudioBook
 from audio_book_alert.storage.audio_book_repository import AudioBookRepository
+
+
+def start_telegram_bot() -> None:
+    telegram_bot.start_bot()
 
 
 def parse_audio_books() -> None:
@@ -31,12 +36,12 @@ def parse_audio_books() -> None:
     SendAlertService(db_session).send_alert(filtered_audio_books)
 
 
-def start_telegram_bot() -> None:
-    telegram_bot.start_bot()
-
-
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "--bot-mode":
-        start_telegram_bot()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "--bot-mode":
+            start_telegram_bot()
+        elif sys.argv[1] == "--migrate":
+            json_to_db_migration.migrate_json_to_database()
     else:
         parse_audio_books()
+    print("Unknown parameters parsed.")
