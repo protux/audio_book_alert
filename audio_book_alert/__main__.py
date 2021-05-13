@@ -50,7 +50,7 @@ if __name__ == "__main__":
         elif sys.argv[1] == "--migrate":
             json_to_db_migration.migrate_json_to_database()
         elif sys.argv[1] == "--silent":
-            dry_run = True
+            silent_run = True
     else:
         parse_audio_books(silent_run)
     print("Unknown parameters parsed.")
