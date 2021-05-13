@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import List
 
 from audio_book_alert.storage.audio_book import AudioBook
-from audio_book_alert.storage import file_utils
 
 AUDIO_BOOK_FILE = path.join(Path.home(), ".audio_book_alert/audio_books.json")
 
