@@ -2,11 +2,11 @@
 
 Revision ID: 0001
 Revises: 
-Create Date: 2021-05-11 21:19:47.756539
+Create Date: 2021-05-13 16:54:35.881639
 
 """
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "0001"
 down_revision = None
@@ -14,7 +14,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     op.create_table(
         "audio_books",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
@@ -33,6 +33,8 @@ def upgrade():
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("link"),
+        sa.UniqueConstraint("link"),
     )
     op.create_table(
         "telegram_subscriptions",
@@ -46,6 +48,6 @@ def upgrade():
     )
 
 
-def downgrade():
+def downgrade() -> None:
     op.drop_table("telegram_subscriptions")
     op.drop_table("audio_books")
