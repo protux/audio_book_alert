@@ -43,14 +43,14 @@ def parse_audio_books(silent_run: bool) -> None:
 
 
 if __name__ == "__main__":
-    silent_run = False
     if len(sys.argv) > 1:
         if sys.argv[1] == "--bot-mode":
             start_telegram_bot()
         elif sys.argv[1] == "--migrate":
             json_to_db_migration.migrate_json_to_database()
         elif sys.argv[1] == "--silent":
-            silent_run = True
+            parse_audio_books(silent_run=True)
+        else:
+            print("Unknown parameters parsed.")
     else:
-        parse_audio_books(silent_run)
-    print("Unknown parameters parsed.")
+        parse_audio_books(silent_run=False)

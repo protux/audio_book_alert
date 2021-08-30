@@ -34,7 +34,9 @@ def audio_book_repository():
 
     db_session.query(AudioBook).delete()
     db_session.commit()
+    db_session.close()
 
+    db_session = test_orm.get_db_for_testing()
     audio_book_repository: AudioBookRepository = AudioBookRepository(db_session)
 
     yield audio_book_repository

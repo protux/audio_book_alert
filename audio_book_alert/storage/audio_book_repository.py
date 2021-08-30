@@ -6,7 +6,7 @@ from audio_book_alert.storage.audio_book import AudioBook
 
 class AudioBookRepository:
     def __init__(self, db_session: SessionLocal):
-        self.db_session = db_session
+        self.db_session = next(db_session)
 
     def get_all_audio_books(self) -> List[AudioBook]:
         return self.db_session.query(AudioBook).all()
