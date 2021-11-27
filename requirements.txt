@@ -1,6 +1,6 @@
-beautifulsoup4==4.9.3
-lxml==4.6.3
-pydantic==1.8.1
-python-telegram-bot==13.5
-requests==2.25.1
-SQLAlchemy==1.4.14
+beautifulsoup4==4.10.0
+lxml==4.6.4
+pydantic==1.8.2
+python-telegram-bot==13.8.1
+requests==2.26.0
+SQLAlchemy==1.4.27
