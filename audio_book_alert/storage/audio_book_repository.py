@@ -42,13 +42,14 @@ def _read_audio_books_from_file() -> List[AudioBook]:
 
 
 def save_audio_books(audio_books: List[AudioBook]) -> None:
-    was_file_created: bool = file_utils.make_sure_file_exists(AUDIO_BOOK_FILE)
-    with open(AUDIO_BOOK_FILE, "a") as audio_book_file:
-        if not was_file_created:
-            audio_book_file.write("\n")
-        serialized_audio_books = _serialize_audio_books(audio_books)
-        file_content = "\n".join(serialized_audio_books)
-        audio_book_file.writelines(file_content)
+    if len(audio_books) > 0:
+        was_file_created: bool = file_utils.make_sure_file_exists(AUDIO_BOOK_FILE)
+        with open(AUDIO_BOOK_FILE, "a") as audio_book_file:
+            if not was_file_created:
+                audio_book_file.write("\n")
+            serialized_audio_books = _serialize_audio_books(audio_books)
+            file_content = "\n".join(serialized_audio_books)
+            audio_book_file.writelines(file_content)
 
 
 def _serialize_audio_books(audio_books: List[AudioBook]) -> List[str]:
