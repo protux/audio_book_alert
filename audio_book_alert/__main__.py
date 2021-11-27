@@ -2,55 +2,36 @@ import sys
 from typing import List
 
 from audio_book_alert.alert import telegram_bot
-from audio_book_alert.alert.send_alert_service import SendAlertService
-from audio_book_alert.database.orm import get_db
-from audio_book_alert.migration import json_to_db_migration
-from audio_book_alert.scraper import parser_config
 from audio_book_alert.scraper import (
     scraper,
     filter,
 )
+from audio_book_alert.storage import audio_book_repository
 from audio_book_alert.storage.audio_book import AudioBook
-from audio_book_alert.storage.audio_book_repository import AudioBookRepository
+from audio_book_alert.alert import send_alert
+from audio_book_alert.scraper import parser_config
+
+
+def parse_audio_books() -> None:
+    audio_books: List[AudioBook] = []
+
+    for author in parser_config.authors:
+        audio_books += scraper.find_titles_by_author(author.strip())
+    for narrator in parser_config.narrators:
+        audio_books += scraper.find_titles_by_narrator(narrator.strip())
+
+    past_audio_books = audio_book_repository.get_all_audio_books()
+    filtered_audio_books = filter.filter_audio_books(audio_books, past_audio_books)
+    audio_book_repository.save_audio_books(filtered_audio_books)
+    send_alert.send_alert(filtered_audio_books)
 
 
 def start_telegram_bot() -> None:
     telegram_bot.start_bot()
 
 
-def parse_audio_books(silent_run: bool) -> None:
-    db_session = get_db()
-    audio_books: List[AudioBook] = []
-    audio_book_repository: AudioBookRepository = AudioBookRepository(db_session)
-
-    for author in parser_config.authors:
-        audio_books += scraper.find_titles_by_author(
-            author.strip(), audio_book_repository
-        )
-    for narrator in parser_config.narrators:
-        audio_books += scraper.find_titles_by_narrator(
-            narrator.strip(), audio_book_repository
-        )
-
-    past_audio_books: List[AudioBook] = audio_book_repository.get_all_audio_books()
-    filtered_audio_books: List[AudioBook] = filter.filter_audio_books(
-        audio_books, past_audio_books
-    )
-    audio_book_repository.save_audio_books(filtered_audio_books)
-
-    if not silent_run:
-        SendAlertService(db_session).send_alert(filtered_audio_books)
-
-
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "--bot-mode":
-            start_telegram_bot()
-        elif sys.argv[1] == "--migrate":
-            json_to_db_migration.migrate_json_to_database()
-        elif sys.argv[1] == "--silent":
-            parse_audio_books(silent_run=True)
-        else:
-            print("Unknown parameters parsed.")
+    if len(sys.argv) > 1 and sys.argv[1] == "--bot-mode":
+        start_telegram_bot()
     else:
-        parse_audio_books(silent_run=False)
+        parse_audio_books()

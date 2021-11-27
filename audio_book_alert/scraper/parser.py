@@ -1,10 +1,10 @@
-import re
 from typing import List
+import re
 
 from bs4 import BeautifulSoup
 
 from audio_book_alert.storage.audio_book import AudioBook
-from audio_book_alert.storage.audio_book_repository import AudioBookRepository
+from audio_book_alert.storage import audio_book_repository
 
 CSS_SELECTOR_LIST_ITEMS = (
     ".adbl-impression-container > "
@@ -43,9 +43,7 @@ def parse_page_count(html_body: str) -> int:
         return 1
 
 
-def parse_audio_books(
-    html_body: str, audio_book_repository: AudioBookRepository
-) -> List[AudioBook]:
+def parse_audio_books(html_body: str) -> List[AudioBook]:
     stored_audible_links = audio_book_repository.get_all_audio_book_links()
     soup: BeautifulSoup = BeautifulSoup(html_body, "lxml")
     audio_books: List[AudioBook] = []
@@ -115,6 +113,7 @@ def parse_by_css_element(bs_element, css_selector: str) -> str:
         for element in elements:
             strings.append(next(element.stripped_strings))
         content: str = ", ".join(strings)
+        # content: str = str(next(elements[0].stripped_strings))
         stripped_content: str = re.sub(r"\s+", " ", content)
         return stripped_content
     else:

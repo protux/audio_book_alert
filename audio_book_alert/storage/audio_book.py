@@ -1,27 +1,17 @@
-from sqlalchemy import (
-    Column,
-    DateTime,
-    Integer,
-    String,
-)
-from sqlalchemy.sql import func
-
-from audio_book_alert.database.orm import Base
+from dataclasses import dataclass
+from typing import Optional
 
 
-class AudioBook(Base):
-    __tablename__ = "audio_books"
-
-    id: Column = Column(Integer, primary_key=True, autoincrement=True)
-    title: Column = Column(String, nullable=False)
-    subtitle: Column = Column(String)
-    author: Column = Column(String, nullable=False)
-    reader: Column = Column(String, nullable=False)
-    play_time: Column = Column(String)
-    release_date: Column = Column(String)
-    language: Column = Column(String)
-    link: Column = Column(String, nullable=False, unique=True)
-    time_added = Column(DateTime, nullable=False, server_default=func.now())
+@dataclass
+class AudioBook:
+    title: str
+    subtitle: Optional[str]
+    author: str
+    reader: str
+    play_time: str
+    release_date: str
+    language: str
+    link: str
 
     def __hash__(self):
         return hash(self.title + self.author + self.play_time)
