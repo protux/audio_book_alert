@@ -5,7 +5,10 @@ from telegram import (
     Update,
     Bot,
 )
-from telegram.error import RetryAfter
+from telegram.error import (
+    TelegramError,
+    RetryAfter,
+)
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -63,9 +66,12 @@ def _unknown_command(update: Update, context: CallbackContext):
 
 def send_message(messages: List[str], chat_ids: List[int]) -> None:
     for chat_id in chat_ids:
-        bot: Bot = Bot(token=config.Settings().telegram_api_key)
-        for message in messages:
-            send_telegram_message(bot, message, chat_id)
+        try:
+            bot: Bot = Bot(token=config.Settings().telegram_api_key)
+            for message in messages:
+                send_telegram_message(bot, message, chat_id)
+        except TelegramError as e:
+            print(f"failed sending update to user. {e}")
 
 
 def send_telegram_message(bot, message, chat_id):
