@@ -23,6 +23,7 @@ def get_all_audio_book_links() -> List[str]:
             audio_book_links: List[str] = [
                 json.loads(audio_book_line)["link"]
                 for audio_book_line in audio_book_lines
+                if len(audio_book_line) > 0
             ]
             return audio_book_links
     else:
